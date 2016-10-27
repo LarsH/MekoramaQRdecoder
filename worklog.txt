@@ -1,0 +1,103 @@
+/start of log 27 oktober 2016
+
+jag vill veta hur QR-formatet fungerar. Att kunna avkoda det och skapa egna
+koder, eller en egen editor.
+
+Helt okej att ha det implementerat i Python.
+
+Scanningen av en bild verkar ske i
+
+public static native byte[] MWBscanGrayscaleImage(byte[] paramArrayOfByte, int paramInt1, int paramInt2);
+
+denna anropas som:
+byte[] arrayOfByte = BarcodeScanner.MWBscanGrayscaleImage(
+		localImageInfo.pixels,
+		localImageInfo.width,
+		localImageInfo.height);
+
+daer arrayOfByte blir null om den mislyckas.
+
+Den avkodade datan skickas till native-funktionen
+scan_finished(arrayOfByte, arrayOfByte.length)
+
+om scanningen misslyckas anropas
+scan_finished(null, 0);
+
+scan_finished anropar, om den faatt mer aen noll bytes:
+asset_write
+vibrate
+tween_start
+
+dags foer IDA?
+
+asset_share aer en javafunktion som delar en level.
+Asset verkar vara det interna namnet paa level.
+
+Vilka funktioner finns native som har namnet asset i sig?
+
+asset_1share_1finished
+asset_list_sandbox
+asset_read
+asset_remove
+asset_rename
+asset_share
+asset_share_finished
+asset_write
+
+Asset_write verkar vara den funktion som sparar leveln.
+Vilka argument tar den?
+
+asset_write anropas ifraan:
+write_png	(0x6b2d8)	(tre argument?)
+scan_finished	(0x78456)	(tre/fyra argument?)
+write_world	(0x
+
+QR-kodens innehaall verkar vara komprimerat med detta lib:
+https://www.ncbi.nlm.nih.gov/IEB/ToolBox/CPP_DOC/lxr/source/src/util/compress/api/miniz/miniz.c
+
+qr-kodens innehaall avkodas med
+int mz_uncompress(
+	unsigned char *pDest,
+	mz_ulong *pDest_len,
+	const unsigned char *pSource,
+	mz_ulong source_len);
+
+parsningen verkar ske i read_world, en ganska laang funktion.
+
+Kan jag avkoda datat med mz_uncompress?
+
+Nej, det verkar inte fungera. Aer funktionen moddad?
+
+Skippar QR och kollar paa assets/*.bin, det aer levlarna
+
+Varje kod verkar boerja med 0113 0dfc 7801 ?
+Kolla storlekarna i assets/*.bin, de tidiga verkar vara ozippade!
+
+Om jag avkodar fraan en bit in? Ja! Fungerar om man skippar de foersta fyra bytesen!
+
+Min avkodade QR-kod ser annorlunda ut, den boerjar med fem bytes?
+
+Aha, UTF-8 staeller till det...
+>>> u'\x01\x13\r\xfc'.encode('utf8')
+'\x01\x13\r\xc3\xbc'
+
+fixas med
+>>> s = eval(repr(qr.data)[1:])
+
+Jag kan avkoda min level 'Wrecked Cargo' ! =)
+
+Det komprimerade innehaallet i en level verkar ha formatet:
+level := name . author . levelData
+name := lenstring
+author := lenstring
+levelData := 0x100c bytes
+lenstring := 1 byte (len) . len bytes
+
+Kan en level vara 16x16x16 block!
+Nej, det verkar inte riktigt staemma, offsetten i de aaterkommande blocken
+staemmer inte. Och det finns 12 byte extra?
+
+Har nu gjort ett pythonskript foer avkodning. Kan jag nu skapa en QR-kod med
+given level-data?
+/End of log 27 oktober 2016
+
