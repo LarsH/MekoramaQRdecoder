@@ -90,7 +90,7 @@ def showTileRotations(t):
 		F += '\x00'*3 + t + chr(i+12)
 		F += '\x00'*(4 + 15*16)
 		F += '\x00' * 16 * 16
-	createQR('Twisted', 'LarsH', F)
+	createQR('Twisted Zappers', 'LarsH', F)
 
 
 def testNewTiles():
@@ -126,16 +126,27 @@ def showAllTiles():
 		F += '\x00'*3 + t
 
 		F += '\x00'*(4 + 15*16)
-	createQR('Tiles', 'LarsH', F)
 
+	createQR('Tiles', 'LarsH', splitLevelData(F))
 
 
 #showAllTiles()
 
 #testNewTiles()
-#showTileRotations('\x08')
+#showTileRotations('\x10')
 
 #testGeneration()
 
-n,a,d = openLevel('cargo.png')
-printLevel(d)
+#n,a,d = openLevel('cargo.png')
+#printLevel(d)
+
+if __name__ == '__main__':
+	import sys
+	if len(sys.argv) < 2:
+		print "Usage:", ' '.join(sys.argv), 'level.png'
+		print "Displays the internals of a Mekorama level"
+	else:
+		n,a,d = openLevel(sys.argv[-1])
+		print 'Level: "%s" by "%s"' % (n,a)
+		printLevel(d)
+
