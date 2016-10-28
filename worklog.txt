@@ -101,3 +101,25 @@ Har nu gjort ett pythonskript foer avkodning. Kan jag nu skapa en QR-kod med
 given level-data?
 /End of log 27 oktober 2016
 
+/start of log 28 oktober 2016
+
+Kollat lite paa hur olika banor aer kodade.
+
+Vissa block verkar ta en byte att koda, andra flera.
+
+000012121207020702070212120000
+00 tom
+01 stone
+02 brick
+12 grass
+0702 stone wedge, bortaat hoeger (nummer 2)
+
+gjorde en testlevel ut till kanterna. Det verkar vara logiskt, 16x16x16 med
+vissa block kodade med flera bytes!
+
+Kan jag nu goera en datorgenererad level? Typ en kub med bara kanterna satta?
+
+Vatten verkar vara kodat med endast en byte paa den vertikala nivaa daer
+ytan sitter. Kolla upp detta senare!
+
+/end of log 28 oktober 2016
