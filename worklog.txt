@@ -123,3 +123,16 @@ Vatten verkar vara kodat med endast en byte paa den vertikala nivaa daer
 ytan sitter. Kolla upp detta senare!
 
 /end of log 28 oktober 2016
+/start of log 28 oktober 2016
+
+Det gick aldeles utmaerkt att generera en level!
+Mekorama-appen ger sedan en snygg "riktig" bild.
+
+Det gaar ocksaa att ha flera gula robotar!
+Bara den sist utsatta blir styrbar isf, de andra beter sig som vanliga robotar.
+
+Gul robot aer 0f 00 (den har riktning)
+
+Jag borde goera en lista oever vilka block som finns, hur de aer kodade och om
+de har riktning.
+Det vore kul om det fanns hemliga block! Kanske en L-robot? =)
