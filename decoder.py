@@ -1,4 +1,5 @@
 import qrtools, os, qrcode
+from tiles import tiles
 
 HEADER = '01130dfc'.decode('hex')
 
@@ -24,6 +25,15 @@ def uncompress(compressedData):
 	assert l == len(data)
 	return data
 
+def splitLevelData(data):
+	ret = []
+	while len(data) > 0:
+		t = data[0]
+		l = tiles[t][1]+1
+		ret += [data[:l]]
+		data = data[l:]
+	return ret
+
 def openLevel(imagename):
 	qr = qrtools.QR()
 	assert(qr.decode(imagename))
@@ -42,22 +52,24 @@ def openLevel(imagename):
 	author = data[2+nameLen:1+nameLen+authorLen]
 
 	levelData = data[1+nameLen+authorLen:]
-	return name, author, levelData
+	return name, author, splitLevelData(levelData)
 
 def createQR(name, author, levelData):
+	levelData = ''.join(levelData)
 	rawData = chr(len(name)) + name + chr(len(author)) + author + levelData
 	data = HEADER + compress(rawData)
 	qrcode.make(data).show()
 
 def printLevel(data):
-	# Printing only works if level does not contain multiple byte blocks
-	assert len(data) == 0x1000, "level contains multibyte blocks!"
-
+	assert len(data) == 0x1000, len(data)
 	for i in range(16):
+		print '<<<', i, '>>>'
 		for j in range(16):
 			a = i*16 + j*256
-			print data[a:a+16].encode('hex')
-		print
+			for b in data[a:a+16]:
+				print tiles[b[0]][2],
+			print
+
 
 def testGeneration():
 	A = '\x01'*16
@@ -69,4 +81,61 @@ def testGeneration():
 	F = D + E*12 + D + E + D
 	createQR('Big Stone Cube', 'LarsH', F)
 
-testGeneration()
+
+def showTileRotations(t):
+	F = ''
+	for i in range(8):
+		F += '\x00'*3 + t + chr(i)
+		F += '\x00'*3 + t + chr(i+8)
+		F += '\x00'*3 + t + chr(i+12)
+		F += '\x00'*(4 + 15*16)
+		F += '\x00' * 16 * 16
+	createQR('Twisted', 'LarsH', F)
+
+
+def testNewTiles():
+	F = '\x00'*14
+	a = 200
+	for i in range(a, a+16):
+		if i == 0x1d:
+			F += '\x11' + '\x0f' + '\x00'*(14 + 15*16)
+		else:
+			F += '\x11' + chr(i) + '\x00'*(14 + 15*16)
+	createQR('Eden', 'LarsH', F)
+
+
+def showAllTiles():
+	F = ''
+	l = [i for i in tiles]
+	l.sort()
+	i = 0
+	for j in range(16):
+		s = l[i]
+		i = (i+1)%len(l)
+		t = s + '\x00'*(tiles[s][1])
+		F += '\x00'*3 + t
+
+		s = l[i]
+		i = (i+1)%len(l)
+		t = s + '\x00'*(tiles[s][1])
+		F += '\x00'*3 + t
+
+		s = l[i]
+		i = (i+1)%len(l)
+		t = s + '\x00'*(tiles[s][1])
+		F += '\x00'*3 + t
+
+		F += '\x00'*(4 + 15*16)
+	createQR('Tiles', 'LarsH', F)
+
+
+
+#showAllTiles()
+
+#testNewTiles()
+#showTileRotations('\x08')
+
+#testGeneration()
+
+n,a,d = openLevel('cargo.png')
+printLevel(d)

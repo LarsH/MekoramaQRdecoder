@@ -1,3 +1,4 @@
 compress
 uncompress
 *.tmp
+*.pyc

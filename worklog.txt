@@ -136,3 +136,19 @@ Gul robot aer 0f 00 (den har riktning)
 Jag borde goera en lista oever vilka block som finns, hur de aer kodade och om
 de har riktning.
 Det vore kul om det fanns hemliga block! Kanske en L-robot? =)
+
+Zappers kan roteras! Det kan man inte goera fraan editorn!
+
+Det finns massa hemliga block! Skriver lista.
+
+De haeftigaste aer nog hjulet, sophinken och den gula bollen.
+
+Har nu listan klar, och dekodern kan printa ut en level lager foer lager!
+
+Det saknas fortfarande rotationer, men det aer overkill.
+
+Tror jag kan se mig som klar tills jag saetter nya maal!
+En text-till-QR och QR-till-text omvandlare foer att kunna redigera levlar
+kanske?
+/end of log 28 oktober 2016
+
