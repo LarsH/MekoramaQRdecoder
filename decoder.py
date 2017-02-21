@@ -129,6 +129,39 @@ def showAllTiles():
 
 	createQR('Tiles', 'LarsH', splitLevelData(F))
 
+def createCar():
+	'''
+	Experiment with the wheel blocks
+	'''
+	level = []
+	for i in range(0x1000):
+		level += [ '\x00' ]
+
+	def f(x,y,z,val):
+		level[x*16*16+y+z*16] = val
+	f(7-5,8,0,'\x19')
+	f(8-5,8,0,'\x19')
+	f(9-5,8,0,'\x19')
+	f(8-5,8,1,'\x14\x00')
+
+	f(7-5,9,0,'\x16\x03')
+	f(9-5,9,0,'\x13\x00')
+
+	f(7-5,7,0,'\x13\x02')
+	f(9-5,7,0,'\x13\x02')
+
+	f(7,8,0,'\x19')
+	f(8,8,0,'\x19')
+	f(9,8,0,'\x11')
+	f(8,8,1,'\x14\x00')
+
+	f(7,9,0,'\x13\x00')
+	f(9,9,0,'\x13\x00')
+
+	f(7,7,0,'\x13\x02')
+	f(9,7,0,'\x13\x02')
+
+	createQR('Cars', 'LarsH',level)
 
 #showAllTiles()
 
